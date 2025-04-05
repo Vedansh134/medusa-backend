@@ -7,3 +7,8 @@ output "vpc_id" {
 output "cluster_name" {
   value = aws_ecs_cluster.nginx-cluster.name
 }
+
+# output for ecs task definition arn
+output "task_definition_arn" {
+  value = aws_ecs_task_definition.medusa-backend-task.arn
+}
