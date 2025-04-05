@@ -36,22 +36,6 @@ jobs:
       run: |
         docker push 637423477239.dkr.ecr.ap-south-1.amazonaws.com/medusa-backend:latest
 
-
-    - name: Deploy to ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: medusa-backend-task-def.json
-        service: medusa-backend-service
-        cluster: medusa-backend-cluster
-        container-name: medusa-backend
-        image: 637423477239.dkr.ecr.ap-south-1.amazonaws.com/medusa-backend:latest
-        wait-for-service-stability: true
-        region: ap-south-1
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
-        desired-count: 1
-
     - name: Terraform Init
       uses: hashicorp/setup-terraform@v2
       with:
@@ -64,3 +48,24 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: ap-south-1
+
+    # Capture the task definition ARN output from Terraform  
+    - name: Set Task Definition ARN  
+      id: taskdef  
+      run: echo "TASK_DEFINITION_ARN=$(terraform output -raw task_definition_arn)" >> $GITHUB_ENV  
+
+    - name: Deploy to ECS
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ env.TASK_DEFINITION_ARN }} # Use the captured task definition ARN  
+        # task-definition: ${{ steps.create-task-definition.outputs.task-definition-arn }} # We'll capture this in Terraform output 
+        service: medusa-backend-service
+        cluster: medusa-backend-cluster
+        container-name: medusa-backend
+        image: 637423477239.dkr.ecr.ap-south-1.amazonaws.com/medusa-backend:latest
+        wait-for-service-stability: true
+        region: ap-south-1
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+        desired-count: 1
