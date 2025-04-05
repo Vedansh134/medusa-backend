@@ -1,28 +1,28 @@
 # defined a ECS cluster with the name "my-cluster"
-resource "aws_ecs_cluster" "nginx-cluster" {
-  name = "nginx-cluster"
+resource "aws_ecs_cluster" "medusa-backend-cluster" {
+  name = "medusa-backend-cluster"
   tags = {
-    Name = "nginx-cluster"
+    Name = "medusa-backend"
   }
 }
 
 # defined a ECS task definition with the name "nginx-task"
-resource "aws_ecs_task_definition" "taskdef" {
-  family = "nginx-task"
+resource "aws_ecs_task_definition" "medusa-backend-task" {
+  family = "medusa-backend-task"
   network_mode = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu = "256"
   memory = "512"
   container_definitions = jsonencode([{
-    name = "nginx"
-    image = "nginx:latest"
+    name      = "medusa-backend"
+    image     = "637423477239.dkr.ecr.ap-south-1.amazonaws.com/medusa-backend:latest"
     essential = true
     cpu = 256
     memory = 512
     portMappings = [
       {
-        containerPort = 80
-        hostPort = 80
+        containerPort = 9000
+        hostPort = 9000
         protocol = "tcp"
       }
     ]
@@ -33,10 +33,10 @@ resource "aws_ecs_task_definition" "taskdef" {
 }
 
 # defined a ECS service with the name "nginx-service"
-resource "aws_ecs_service" "nginx-service" {
-  name = "nginx-service"
-  cluster = aws_ecs_cluster.nginx-cluster.id
-  task_definition = aws_ecs_task_definition.taskdef.arn
+resource "aws_ecs_service" "medusa-backend-service" {
+  name = "medusa-backend-service"
+  cluster = aws_ecs_cluster.medusa-backend-cluster.id
+  task_definition = aws_ecs_task_definition.medusa-backend-task.arn
   desired_count = 2
   launch_type = "FARGATE"
   network_configuration {
