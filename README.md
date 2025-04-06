@@ -68,4 +68,35 @@ Join our [Discord server](https://discord.com/invite/medusajs) to meet other com
 
 ## License
 
-Licensed under the [MIT License](https://github.com/medusajs/medusa/blob/develop/LICENSE).
+Licensed under the [MIT License](https://github.com/medusajs/medusa/blob/develop/LICENSE
+
+## Update by Vedansh kumar
+
+First, I forked the official GitHub repo of the Medusa backend for a more straightforward setup, using guidance from the Medusa official documentation. After forking the repo, I added my Terraform folder and the deploy.yml file in the .github/workflows folder to enable GitHub Actions.
+
+Next, I initialized the Terraform setup, where I configured the code for several components:
+
+Region: Specified the AWS region for deployment.
+VPC: Created a Virtual Private Cloud.
+Security Groups: Set up security groups to control traffic.
+ECS (Elastic Container Service): Configured the ECS cluster.
+ECS Task Definition: Defined the task configuration for running Medusa.
+I also created a Dockerfile for the Medusa backend and pushed it to AWS ECR (Elastic Container Registry).
+brake for tf setup
+
+Alongside the Terraform configuration, I set up a GitHub Actions pipeline to automate the deployment process. However, I encountered some challenges in fully implementing the pipeline. Despite following tutorials on YouTube and leveraging the assistance of ChatGPT, I wasn't able to complete it as intended.
+
+To start the Terraform deployment, I ran the following commands in sequence:
+
+terraform init
+terraform plan
+terraform validate
+terraform apply
+Once executed, my infrastructure was ready! Here’s a look at my AWS Management Console for ECS.
+
+Unfortunately, I was unable to complete the project entirely, but I learned a lot through this process, and I appreciate the resources available online, including YouTube and ChatGPT.
+
+Thank you for giving the opportunity but sadly i not complete this project completly 
+Thank you
+
+
